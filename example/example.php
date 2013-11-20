@@ -85,7 +85,7 @@ $item = $bid->add($client, "My New Folder");
 
 echo "<table border=1>";
 ?>
-<tr><th>Name</th><th>Mtime</th><th>Category</th><th>Path</th></tr>
+<tr><th>Name</th><th>Mtime</th><th>type</th><th>Path</th></tr>
 <?
 echo "<tr><td>" . $item->getName()
 . "</td><td>" . $item->getMTime()
@@ -105,7 +105,7 @@ $folder = $item;
 $item = $folder->rename($client, "NewFolderName");
 echo "<table border=1>";
 ?>
-<tr><th>Name</th><th>Mtime</th><th>Category</th><th>Path</th></tr>
+<tr><th>Name</th><th>Mtime</th><th>type</th><th>Path</th></tr>
 <?
 echo "<tr><td>" . $item->getName()
 . "</td><td>" . $item->getMTime()
@@ -125,7 +125,7 @@ echo "<h2>Example 5 - delete a folder</h2>";
 $item = $folder->remove($client);
 echo "<table border=1>";
 ?>
-<tr><th>Name</th><th>Mtime</th><th>Category</th><th>Path</th></tr>
+<tr><th>Name</th><th>Mtime</th><th>type</th><th>Path</th></tr>
 <?
 echo "<tr><td>" . $item->getName()
 . "</td><td>" . $item->getMTime()
@@ -135,37 +135,9 @@ echo "<tr><td>" . $item->getName()
 echo "</table>";
 
 /*
- * EXAMPLE 6 - copy a file from BitcasaInfinteDrive
+ * EXAMPLE 6 - upload a file from BitcasaInfinteDrive
  */
-echo "<h2>Example 6 - copy a file</h2>";
-
-
-try {
-	$items = BitcasaInfiniteDrive::listAll($client);
-	$bid = BitcasaInfiniteDrive::getInfiniteDrive($client);
-	$item = BitcasaItem::findByName("Welcome to Bitcasa.pdf", $items);
-	$result = $item->copy($client, $bid, "NewFile.pdf");
-}
-catch (Eception $ex) {
-	var_dump($ex);
-}
-
-echo "<table border=1>";
-?>
-<tr><th>Name</th><th>Mtime</th><th>Category</th><th>Path</th></tr>
-<?
-echo "<tr><td>" . $result->getName()
-. "</td><td>" . $result->getMTime()
-. "</td><td>" . $result->getType()
-. "</td><td>" . $result->getPath() . "</td></tr>";
-
-echo "</table>";
-
-
-/*
- * EXAMPLE 7 - upload a file from BitcasaInfinteDrive
- */
-echo "<h2>Example 7 - upload a file</h2>";
+echo "<h2>Example 6 - upload a file</h2>";
 
 
 try {
@@ -178,7 +150,7 @@ catch (Eception $ex) {
 
 echo "<table border=1>";
 ?>
-<tr><th>Name</th><th>Mtime</th><th>Category</th><th>Path</th></tr>
+<tr><th>Name</th><th>Mtime</th><th>type</th><th>Path</th></tr>
 <?
 echo "<tr><td>" . $result->getName()
 . "</td><td>" . $result->getMTime()
@@ -188,9 +160,57 @@ echo "<tr><td>" . $result->getName()
 echo "</table>";
 
 
+/*
+ * EXAMPLE 7 - copy a file from BitcasaInfinteDrive
+ */
 
+echo "<h2>Example 7 - copy a file</h2>";
 
+$file_to_copy = $result;
 
+try {
+	$result = $file_to_copy->copy($client, $bid, "hosts.txt");
+}
+catch (Eception $ex) {
+	var_dump($ex);
+}
+
+echo "<table border=1>";
+?>
+<tr><th>Name</th><th>Mtime</th><th>type</th><th>Path</th></tr>
+<?
+echo "<tr><td>" . $result->getName()
+. "</td><td>" . $result->getMTime()
+. "</td><td>" . $result->getType()
+. "</td><td>" . $result->getPath() . "</td></tr>";
+
+echo "</table>";
+
+/*
+ * EXAMPLE 8 - copy a file from BitcasaInfinteDrive
+ */
+
+echo "<h2>Example 8 - delete a file</h2>";
+
+$file_to_delete = $file_to_copy;
+
+try {
+	$result = $file_to_delete->remove($client);
+}
+catch (Eception $ex) {
+	var_dump($ex);
+}
+
+echo "<table border=1>";
+?>
+<tr><th>Name</th><th>Mtime</th><th>type</th><th>Path</th></tr>
+<?
+echo "<tr><td>" . $result->getName()
+. "</td><td>" . $result->getMTime()
+. "</td><td>" . $result->getType()
+. "</td><td>" . $result->getPath() . "</td></tr>";
+
+echo "</table>";
 
 ?>
 
