@@ -331,9 +331,10 @@ class BitcasaClient
 			$path = $item->getPath();
 		}
 		else {
-			$path = "/";
+			$bid = $this->getInfiniteDrive();
+			$path = $bid->getPath();
 		}
-		
+
 		return $this->doListFolder($path, $category);
 	}
 
@@ -427,6 +428,10 @@ class BitcasaClient
 
 	public function doListFolder($path, $category = NULL)
 	{
+		if ($path == NULL) {
+			$path = "/";
+		}
+
 		$device = NULL;
 		$level = 0;
 		$mf = "/Mirrored Folders";
@@ -438,7 +443,7 @@ class BitcasaClient
 			$level = 2;
 			$path = "/";
 		}
-		else if ($this->startsWith($path, "/Mirrored Folders/")) {
+		else if ($this->startsWith($path, $mf . "/")) {
 			$device = substr($path, strlen($mf) + 1);
 			$level = 3;
 			$path = "/";
@@ -450,10 +455,11 @@ class BitcasaClient
 			$args["depth"] = 0;
 		}
 		else {
-			
+			$depth = 1;
 		}
 
-		return $this->listResult($this->http_get("/folders" . $path, $args), $level, $device);
+		$files = $this->http_get("/folders" . $path, $args);
+		return $this->listResult($files, $level, $device);
 	}
 
 
@@ -470,7 +476,7 @@ class BitcasaClient
 	}
 
 
-	public function copyFolder($oldpath, $newpath, $filename = NULL, $exists = "overwrite")
+	public function copyFolder($oldpath, $newpath, $filename = NULL, $exists = "rename")
 	{
 		$body = array("operation" => "copy",
 					  "from" => $oldpath,
@@ -485,7 +491,7 @@ class BitcasaClient
 	}
 
 
-	public function moveFolder($oldpath, $newpath, $filename = NULL, $exists = "overwrite")
+	public function moveFolder($oldpath, $newpath, $filename = NULL, $exists = "rename")
 	{
 		$body = array("operation" => "move",
 					  "from" => $oldpath,
@@ -498,7 +504,7 @@ class BitcasaClient
 	}
 
 
-	public function renameFolder($path, $newname, $exists = "overwrite")
+	public function renameFolder($path, $newname, $exists = "rename")
 	{
 		$body = array("operation" => "rename",
 					  "from" => $path,
@@ -562,7 +568,7 @@ class BitcasaClient
 		$mirror = false;
 
 		if (isset($result["error"]) && $result["error"] != NULL) {
-			// throw error exception here
+			throw new BitcasaException("Error occurred from API call:" . $result["error"]);
 		}
 
 		$items = $result["result"]["items"];
@@ -767,7 +773,6 @@ class BitcasaClient
 			}
 		}
 
-
 		$r = new HttpRequest(($full_url), HttpRequest::METH_GET);
 
 		$r->send();
@@ -865,12 +870,11 @@ class BitcasaClient
 			}
 		}
 
-		$r = new HttpRequest(($full_url), HttpRequest::METH_POST);
+		$r = new HttpRequest($full_url, HttpRequest::METH_POST);
 
 		$r->setBody($body);
 		$r->send();
 		$rc = $r->getResponseCode();
-
 		if ($rc >= 200 && $rc < 300) {
 
 			$response = $r->getResponseBody();
