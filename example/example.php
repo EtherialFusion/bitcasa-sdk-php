@@ -36,7 +36,7 @@ echo "<h2>Example 1 - list infinite drive</h2>";
 try {
 	$items = BitcasaInfiniteDrive::listAll($client);
 }
-catch (Eception $ex) {
+catch (Exception $ex) {
 	var_dump($ex);
 }
 
@@ -144,7 +144,7 @@ try {
 	$bid = BitcasaInfiniteDrive::getInfiniteDrive($client);
 	$result = $bid->upload($client, "/etc/hosts", "UpFile.pdf");
 }
-catch (Eception $ex) {
+catch (Exception $ex) {
 	var_dump($ex);
 }
 
@@ -171,7 +171,7 @@ $file_to_copy = $result;
 try {
 	$result = $file_to_copy->copy($client, $bid, "hosts.txt");
 }
-catch (Eception $ex) {
+catch (Exception $ex) {
 	var_dump($ex);
 }
 
@@ -197,7 +197,7 @@ $file_to_delete = $file_to_copy;
 try {
 	$result = $file_to_delete->remove($client);
 }
-catch (Eception $ex) {
+catch (Exception $ex) {
 	var_dump($ex);
 }
 
