@@ -465,8 +465,8 @@ class BitcasaClient
 
 	public function removeFolder($path)
 	{
-		$result = $this->listResult($this->http_delete("/folders", array(), $this->encodeArray(array("path" => $path))));
-		return $result[0];
+		$result = $this->singleResult($this->http_delete("/folders", array(), $this->encodeArray(array("path" => $path))));
+		return $result;
 	}
 
 
