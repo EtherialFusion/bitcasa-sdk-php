@@ -3,29 +3,10 @@
 include_once("../BitcasaClient.php");
 include_once("config.php");
 
-$client_id = OAUTH_CLIENTID;
-$secret = OAUTH_SECRET;
-
-if (!isset($_GET['authorization_code']))
-{
-	header("Location: .");
-	die();
-}
-
 $client = new BitcasaClient();
+//$client->setAccessToken($_GET["access_token"]);
+$client->setAccessTokenFromRequest();
 
-try {
-	if ($client->authenticate($client_id, $secret)) {
-		echo "<br>token = " . $client->getAccessToken() . "<br>";
-	}
-	else {
-		echo "fail";
-		exit();
-	}
-}
-catch (Exception $ex) {
-	var_dump($ex);
-}
 
 /*
  * EXAMPLE 1 - listing the contents of the Bitcasa Infinite Drive
@@ -38,6 +19,7 @@ try {
 }
 catch (Exception $ex) {
 	var_dump($ex);
+	die("example 1 failed");
 }
 
 echo "<table border=1>";
