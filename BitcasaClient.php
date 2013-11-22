@@ -87,7 +87,7 @@ class BitcasaClient
 	 */
 	public function setAccessTokenFromRequest()
 	{
-		if (isset($_REQUEST["access_token"]) && "" == $_REQUEST["access_token"]) {
+		if (isset($_REQUEST["access_token"]) && "" != $_REQUEST["access_token"]) {
 			$this->access_token = $_REQUEST["access_token"];
 		}
 		else {
@@ -729,7 +729,7 @@ class BitcasaClient
 			}
 		}
 
-		$r = new HttpRequest(urlencode($full_url), HttpRequest::METH_GET);
+		$r = new HttpRequest($full_url, HttpRequest::METH_GET);
 
 		$r->send();
 		$rc = $r->getResponseCode();
@@ -773,7 +773,7 @@ class BitcasaClient
 			}
 		}
 
-		$r = new HttpRequest(($full_url), HttpRequest::METH_GET);
+		$r = new HttpRequest($full_url, HttpRequest::METH_GET);
 
 		$r->send();
 		$rc = $r->getResponseCode();
